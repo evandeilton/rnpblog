@@ -1,0 +1,91 @@
+---
+title: Séries temporais
+author: LOPES, J. E.
+date: '2019-07-30'
+slug: séries-temporais
+categories:
+  - R
+tags:
+  - Time series
+  - séries temporais
+  - ARIMA
+bibliography: [bib/articles.bib, bib/book.bib, bib/packages.bib]
+biblio-style: apalike
+link-citations: true
+self-contained: true
+---
+
+
+# Introdução
+
+Seja no mercado financeiro, na previsão do tempo ou até na quantidade de vezes 
+que piscamos os olhos por dia, as séries temporais estão presentes. As séries
+temporais possuem grande valor na tomada de decisão em diversas áreas do conhecimento 
+especialmente por sua flexibilidade e possibilidade de extrapolação para o futuro,
+sendo ferramentas ideais para fazer _forecast_ ou previsão. 
+
+Metodologias envolvendo automatização surgem como um ferramental adicional para
+a tomada de decisão em negócios relacionados não apenas à Tecnologia da Informação,
+mas a outros segmentos que geram números dispostos na forma de séries temporais.
+Sabemos que soluções de _forecast_ são importantes na tomada de decisão, contudo são caras
+no mercado. E, em um cenário de risco de crise econômica as empresas tornam-se resistentes
+a aumentar sua planilha de gastos para resolver seus problemas ao contrário, querem
+reduzí-las. Uma possível saída que vem se mostrando atrativa é a utilização de
+ferramentas gratuitas ou de código aberto para auxiliar neste processo. Diante disto,
+no cenário de linguagens de programação a linguagem R vem se destacando e já é
+utilizada por inúmeras empresas e universidades ao redor do mundo, entre elas pode-
+se citar Micosoft, Google, Ford, Facebook dentre outras.
+
+Neste artigo, vamos trabalhar com R e mostrar uma solução capaz de fazer análise e
+_forecast_ de séries temporais univariadas por vários métodos estatísticos feta de forma 
+automática.
+
+# Entendendo uma série temporal
+
+Diversos autores definem séries temporais, [@ehlers2009analise]  por exemplo, define
+como: 
+
+> Uma coleção de observações feitas sequencialmente ao longo do tempo. 
+
+Uma característica muito importante das séries temporais é que os elementos posicionados
+no tempo apresentam algum tipo de relação de dependência entre si e busca-se na
+modelagem estatística, analisar estas relações. Toda série temporal é também um processo
+estocástico e pesquisadores como [@granger2014forecasting] dão ênfase na
+modelagem focada não apenas no comportamento dos dados, mas no mecanismo gerador da série,
+isto porque à medida em que tal mecanismo é compreendido torna-se mais claro o entendimento
+dos fenômenos envolvidos na construção no processo estocástico gerador da série e
+consequentemente na qualiadede dos modelos preditivos.
+
+As séries podem ser simples ou *univariadas* e também *multivariadas*. Neste
+artigo serão trabalhadas apenas séries univariadas. As séries temporais podem ser
+ainda *discretas* ou *contínuas*: as discretas são formadas por processos de contagem
+enquanto as contínuas por outros mecanismos gerados de números reais.
+
+Formalmente, dado um conjunto $T = \{t:t_1<t<t_2\}$, uma série temporal neste
+conjunto é definida por $\{X(t): t \in T\}$ se a série é contínua, caso contrário o conjunto
+fica definido como $T = \{t:t_1,t_2,t_3, ..., t_n\}$, e série mantém a mesma definição.
+
+As principais características das séries são *tendência* e *sazonalidade*. Quando
+é observado nos dados padrões de *crescimento* ou *decrescimento linear*, *exponencial*
+ou *amortecido* estuda-se *relações de tendência*. Quando se observa *padrões 
+periódicos de repetição* estuda-se *sazonalidade* que pode ser *aditiva* caso em que
+as flutuações sazonais são constantes ou quase e *multiplicativas* quando o padrão
+sazonal varia. Podem ainda ser encontrados tipos de séries *constantes* quando os
+dados se *repetem ao longo do tempo* e também séries *não lineares* que podem
+apresentar *comportamentos não determinísticos*. Por último também pode haver
+*séries cíclicas* que contemplam *fenômeno de ocorrência periódica constante* como,
+por exemplo, a passagem do cometa Halley que a cada 75-76 adentra às regiões
+interiores do sistema solar.
+
+![Exemplo de séries temporais de consumo de memória física e de CPU em dois servidores quaisquer.](/post/2019-07-30-séries-temporais_files/blog_exemplo_series.png){width=96%}
+
+A Figura acima exemplifica algumas séries temporais representando consumo de
+memória física e de CPU em dois servidores quaisquer na frequência diária. Em (A)
+nota-se uma série com padrão de comportamento quase estacionário e sem tendência
+de crescimento ou decrescimento, já em (B) nota-se uma leve tendência de
+crescimento após fevereiro/2015. Em (C) tem-se um padrão sazonal onde os vales
+são consumos em finais de semana e picos o consumo em jornadas de pico. Já em
+(D) tem-se um padrão caótico dos dados onde não se nota tendência ou sazonalidade
+dos dados com o passar do tempo.
+
+

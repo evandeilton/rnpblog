@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.56.2" />
+
+
+<title>Séries temporais - A Hugo website</title>
+<meta property="og:title" content="Séries temporais - A Hugo website">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/rstudio/blogdown">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/rstudio">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">4 min read</span>
+    
+
+    <h1 class="article-title">Séries temporais</h1>
+
+    
+    <span class="article-date">2019-07-30</span>
+    
+
+    <div class="article-content">
+      
+
+
+<div id="introducao" class="section level1">
+<h1>Introdução</h1>
+<p>Seja no mercado financeiro, na previsão do tempo ou até na quantidade de vezes
+que piscamos os olhos por dia, as séries temporais estão presentes. As séries
+temporais possuem grande valor na tomada de decisão em diversas áreas do conhecimento
+especialmente por sua flexibilidade e possibilidade de extrapolação para o futuro,
+sendo ferramentas ideais para fazer <em>forecast</em> ou previsão.</p>
+<p>Metodologias envolvendo automatização surgem como um ferramental adicional para
+a tomada de decisão em negócios relacionados não apenas à Tecnologia da Informação,
+mas a outros segmentos que geram números dispostos na forma de séries temporais.
+Sabemos que soluções de <em>forecast</em> são importantes na tomada de decisão, contudo são caras
+no mercado. E, em um cenário de risco de crise econômica as empresas tornam-se resistentes
+a aumentar sua planilha de gastos para resolver seus problemas ao contrário, querem
+reduzí-las. Uma possível saída que vem se mostrando atrativa é a utilização de
+ferramentas gratuitas ou de código aberto para auxiliar neste processo. Diante disto,
+no cenário de linguagens de programação a linguagem R vem se destacando e já é
+utilizada por inúmeras empresas e universidades ao redor do mundo, entre elas pode-
+se citar Micosoft, Google, Ford, Facebook dentre outras.</p>
+<p>Neste artigo, vamos trabalhar com R e mostrar uma solução capaz de fazer análise e
+<em>forecast</em> de séries temporais univariadas por vários métodos estatísticos feta de forma
+automática.</p>
+</div>
+<div id="entendendo-uma-serie-temporal" class="section level1">
+<h1>Entendendo uma série temporal</h1>
+<p>Diversos autores definem séries temporais, <span class="citation">(EHLERS <a href="#ref-ehlers2009analise">2009</a>)</span> por exemplo, define
+como:</p>
+<blockquote>
+<p>Uma coleção de observações feitas sequencialmente ao longo do tempo.</p>
+</blockquote>
+<p>Uma característica muito importante das séries temporais é que os elementos posicionados
+no tempo apresentam algum tipo de relação de dependência entre si e busca-se na
+modelagem estatística, analisar estas relações. Toda série temporal é também um processo
+estocástico e pesquisadores como <span class="citation">(Granger and Newbold <a href="#ref-granger2014forecasting">2014</a>)</span> dão ênfase na
+modelagem focada não apenas no comportamento dos dados, mas no mecanismo gerador da série,
+isto porque à medida em que tal mecanismo é compreendido torna-se mais claro o entendimento
+dos fenômenos envolvidos na construção no processo estocástico gerador da série e
+consequentemente na qualiadede dos modelos preditivos.</p>
+<p>As séries podem ser simples ou <em>univariadas</em> e também <em>multivariadas</em>. Neste
+artigo serão trabalhadas apenas séries univariadas. As séries temporais podem ser
+ainda <em>discretas</em> ou <em>contínuas</em>: as discretas são formadas por processos de contagem
+enquanto as contínuas por outros mecanismos gerados de números reais.</p>
+<p>Formalmente, dado um conjunto <span class="math inline">\(T = \{t:t_1&lt;t&lt;t_2\}\)</span>, uma série temporal neste
+conjunto é definida por <span class="math inline">\(\{X(t): t \in T\}\)</span> se a série é contínua, caso contrário o conjunto
+fica definido como <span class="math inline">\(T = \{t:t_1,t_2,t_3, ..., t_n\}\)</span>, e série mantém a mesma definição.</p>
+<p>As principais características das séries são <em>tendência</em> e <em>sazonalidade</em>. Quando
+é observado nos dados padrões de <em>crescimento</em> ou <em>decrescimento linear</em>, <em>exponencial</em>
+ou <em>amortecido</em> estuda-se <em>relações de tendência</em>. Quando se observa <em>padrões
+periódicos de repetição</em> estuda-se <em>sazonalidade</em> que pode ser <em>aditiva</em> caso em que
+as flutuações sazonais são constantes ou quase e <em>multiplicativas</em> quando o padrão
+sazonal varia. Podem ainda ser encontrados tipos de séries <em>constantes</em> quando os
+dados se <em>repetem ao longo do tempo</em> e também séries <em>não lineares</em> que podem
+apresentar <em>comportamentos não determinísticos</em>. Por último também pode haver
+<em>séries cíclicas</em> que contemplam <em>fenômeno de ocorrência periódica constante</em> como,
+por exemplo, a passagem do cometa Halley que a cada 75-76 adentra às regiões
+interiores do sistema solar.</p>
+<div class="figure">
+<img src="/post/2019-07-30-séries-temporais_files/blog_exemplo_series.png" alt="Exemplo de séries temporais de consumo de memória física e de CPU em dois servidores quaisquer." style="width:96.0%" />
+<p class="caption">Exemplo de séries temporais de consumo de memória física e de CPU em dois servidores quaisquer.</p>
+</div>
+<p>A Figura acima exemplifica algumas séries temporais representando consumo de
+memória física e de CPU em dois servidores quaisquer na frequência diária. Em (A)
+nota-se uma série com padrão de comportamento quase estacionário e sem tendência
+de crescimento ou decrescimento, já em (B) nota-se uma leve tendência de
+crescimento após fevereiro/2015. Em (C) tem-se um padrão sazonal onde os vales
+são consumos em finais de semana e picos o consumo em jornadas de pico. Já em
+(D) tem-se um padrão caótico dos dados onde não se nota tendência ou sazonalidade
+dos dados com o passar do tempo.</p>
+<div id="refs" class="references">
+<div id="ref-ehlers2009analise">
+<p>EHLERS, R. 2009. “Análise de Séries Temporais: Relatório Técnico.” <em>Säo Paulo: USP</em>.</p>
+</div>
+<div id="ref-granger2014forecasting">
+<p>Granger, Clive William John, and Paul Newbold. 2014. <em>Forecasting Economic Time Series</em>. Academic Press.</p>
+</div>
+</div>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
