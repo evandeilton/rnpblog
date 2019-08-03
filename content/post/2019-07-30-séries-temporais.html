@@ -124,8 +124,22 @@ devtools::install_github(&#39;wilsonfreitas/rbcb&#39;)
 devtools::install_github(&#39;msperlin/GetHFData&#39;) </code></pre>
 </div>
 </div>
-<div id="analisando-series-temporais" class="section level1 unnumbered">
+<div id="analisando-series-temporais" class="section level1">
 <h1>Analisando séries temporais</h1>
+<p>Vamos analisar algumas séries</p>
+<ul>
+<li>Taxa de juros - Selic</li>
+</ul>
+<pre class="r"><code>require(dplyr)
+require(xts)
+#rbcb::search_series(&quot;SELIC&quot;)
+selic &lt;- rbcb::get_series(c(Selic = 4390), 
+                          start_date = &quot;2018-01-01&quot;,
+                          end_date = &quot;2019-07-31&quot;, 
+                          as = &quot;xts&quot;
+                          )
+selic %&gt;%  xts::plot.xts()</code></pre>
+<p><img src="/post/2019-07-30-s%C3%A9ries-temporais_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="refs" class="references">
 <div id="ref-ehlers2009analise">
 <p>EHLERS, R. 2009. “Análise de Séries Temporais: Relatório Técnico.” <em>Säo Paulo: USP</em>.</p>

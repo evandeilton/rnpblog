@@ -128,4 +128,19 @@ devtools::install_github('msperlin/GetHFData')
 
 # Analisando séries temporais
 
+Vamos analisar algumas séries
+
++ Taxa de juros - Selic
+
+```{r, message=FALSE, warning=FALSE, fig.align='center'}
+require(dplyr)
+require(xts)
+#rbcb::search_series("SELIC")
+selic <- rbcb::get_series(c(Selic = 4390), 
+                          start_date = "2018-01-01",
+                          end_date = "2019-07-31", 
+                          as = "xts"
+                          )
+selic %>%  xts::plot.xts()
+```
 
