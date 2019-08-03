@@ -36,9 +36,9 @@ no cenário de linguagens de programação a linguagem R vem se destacando e já
 utilizada por inúmeras empresas e universidades ao redor do mundo, entre elas pode-
 se citar Micosoft, Google, Ford, Facebook dentre outras.
 
-Neste artigo, vamos trabalhar com R e mostrar uma solução capaz de fazer análise e
-_forecast_ de séries temporais univariadas por vários métodos estatísticos feta de forma 
-automática.
+Neste texto, trabalharemos com R e mostraremos como fazer análise e _forecast_ de 
+séries temporais univariadas por vários métodos estatísticos em um _framework_
+semi-manual.
 
 # Entendendo uma série temporal
 
@@ -77,7 +77,7 @@ apresentar *comportamentos não determinísticos*. Por último também pode have
 por exemplo, a passagem do cometa Halley que a cada 75-76 adentra às regiões
 interiores do sistema solar.
 
-![Exemplo de séries temporais de consumo de memória física e de CPU em dois servidores quaisquer.](/post/2019-07-30-séries-temporais_files/blog_exemplo_series.png){width=96%}
+![Exemplos de séries de memória física de CPU em dois computadores.](/post/2019-07-30-séries-temporais_files/blog_exemplo_series.png){width=96%}
 
 A Figura acima exemplifica algumas séries temporais representando consumo de
 memória física e de CPU em dois servidores quaisquer na frequência diária. Em (A)
@@ -87,5 +87,45 @@ crescimento após fevereiro/2015. Em (C) tem-se um padrão sazonal onde os vales
 são consumos em finais de semana e picos o consumo em jornadas de pico. Já em
 (D) tem-se um padrão caótico dos dados onde não se nota tendência ou sazonalidade
 dos dados com o passar do tempo.
+
+# Obtendo séries temporais na internet
+
+Existem diversas fontes de séries na internet, listamos aqui as principais nacionais e
+internacionais.
+
+## Fontes nacionais em pacotes
+
++ *BETS*: Brazilian economic time series
++ *rbcb*: Portal de dados abertos do [BCB](https://dadosabertos.bcb.gov.br/)
++ *GetTDData*: [Dados do Tesouro Direto](http://www.tesouro.gov.br/tesouro-direto-balanco-e-estatisticas)
++ *GetDFPData*: [Demostrativos financeiros](http://www.bmfbovespa.com.br/pt_br/produtos/listados-a-vista-e-derivativos/renda-variavel/empresas-listadas.htm) de empresas listadas na B3
++ *GetHFTData*: Dados de negociações em alta frequência da B3
+
+## Fontes internacionais
+
++ *Quandl*: The world’s most powerful data lives on Quandl (link).
++ *quantmod*: Framework para modelagem em finanças quantitativas.
++ *tidyquant*: Bringing financial analysis to the tidyverse.
+
+## Instalando os pacotes
+Podem ser instalados como os comandos abaixo
+
+```{r, echo=TRUE, eval=FALSE}
+## Instalar pacotes
+packs <- c("BETS", "rbcb", "GetTDData", "GetDFPData", 
+           "GetHFTData","Quandl","quantmod", "tidyquant")
+lapply(packs, function(i)(
+  if(!require(i, character.only = TRUE)){
+    install.packages(i, dependencies = TRUE, quiet = TRUE)
+  }
+))
+
+# Se rbcb e GetHFData não estiverem no CRAN
+devtools::install_github('wilsonfreitas/rbcb')
+devtools::install_github('msperlin/GetHFData') 
+```
+
+
+# Analisando séries temporais
 
 

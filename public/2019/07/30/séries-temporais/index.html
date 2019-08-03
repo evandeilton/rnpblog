@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="/css/fonts.css" media="all">
 <link rel="stylesheet" href="/css/main.css" media="all">
 
@@ -88,9 +93,9 @@ ferramentas gratuitas ou de código aberto para auxiliar neste processo. Diante 
 no cenário de linguagens de programação a linguagem R vem se destacando e já é
 utilizada por inúmeras empresas e universidades ao redor do mundo, entre elas pode-
 se citar Micosoft, Google, Ford, Facebook dentre outras.</p>
-<p>Neste artigo, vamos trabalhar com R e mostrar uma solução capaz de fazer análise e
-<em>forecast</em> de séries temporais univariadas por vários métodos estatísticos feta de forma
-automática.</p>
+<p>Neste texto, trabalharemos com R e mostraremos como fazer análise e <em>forecast</em> de
+séries temporais univariadas por vários métodos estatísticos em um <em>framework</em>
+semi-manual.</p>
 </div>
 <div id="entendendo-uma-serie-temporal" class="section level1">
 <h1>Entendendo uma série temporal</h1>
@@ -126,8 +131,8 @@ apresentar <em>comportamentos não determinísticos</em>. Por último também po
 por exemplo, a passagem do cometa Halley que a cada 75-76 adentra às regiões
 interiores do sistema solar.</p>
 <div class="figure">
-<img src="/post/2019-07-30-séries-temporais_files/blog_exemplo_series.png" alt="Exemplo de séries temporais de consumo de memória física e de CPU em dois servidores quaisquer." style="width:96.0%" />
-<p class="caption">Exemplo de séries temporais de consumo de memória física e de CPU em dois servidores quaisquer.</p>
+<img src="/post/2019-07-30-séries-temporais_files/blog_exemplo_series.png" alt="Exemplos de séries de memória física de CPU em dois computadores." style="width:96.0%" />
+<p class="caption">Exemplos de séries de memória física de CPU em dois computadores.</p>
 </div>
 <p>A Figura acima exemplifica algumas séries temporais representando consumo de
 memória física e de CPU em dois servidores quaisquer na frequência diária. Em (A)
@@ -137,6 +142,48 @@ crescimento após fevereiro/2015. Em (C) tem-se um padrão sazonal onde os vales
 são consumos em finais de semana e picos o consumo em jornadas de pico. Já em
 (D) tem-se um padrão caótico dos dados onde não se nota tendência ou sazonalidade
 dos dados com o passar do tempo.</p>
+</div>
+<div id="obtendo-series-temporais-na-internet" class="section level1">
+<h1>Obtendo séries temporais na internet</h1>
+<p>Existem diversas fontes de séries na internet, listamos aqui as principais nacionais e
+internacionais.</p>
+<div id="fontes-nacionais-em-pacotes" class="section level2">
+<h2>Fontes nacionais em pacotes</h2>
+<ul>
+<li><em>BETS</em>: Brazilian economic time series</li>
+<li><em>rbcb</em>: Portal de dados abertos do <a href="https://dadosabertos.bcb.gov.br/">BCB</a></li>
+<li><em>GetTDData</em>: <a href="http://www.tesouro.gov.br/tesouro-direto-balanco-e-estatisticas">Dados do Tesouro Direto</a></li>
+<li><em>GetDFPData</em>: <a href="http://www.bmfbovespa.com.br/pt_br/produtos/listados-a-vista-e-derivativos/renda-variavel/empresas-listadas.htm">Demostrativos financeiros</a> de empresas listadas na B3</li>
+<li><em>GetHFTData</em>: Dados de negociações em alta frequência da B3</li>
+</ul>
+</div>
+<div id="fontes-internacionais" class="section level2">
+<h2>Fontes internacionais</h2>
+<ul>
+<li><em>Quandl</em>: The world’s most powerful data lives on Quandl (link).</li>
+<li><em>quantmod</em>: Framework para modelagem em finanças quantitativas.</li>
+<li><em>tidyquant</em>: Bringing financial analysis to the tidyverse.</li>
+</ul>
+</div>
+<div id="instalando-os-pacotes" class="section level2">
+<h2>Instalando os pacotes</h2>
+<p>Podem ser instalados como os comandos abaixo</p>
+<pre class="r"><code>## Instalar pacotes
+packs &lt;- c(&quot;BETS&quot;, &quot;rbcb&quot;, &quot;GetTDData&quot;, &quot;GetDFPData&quot;, 
+           &quot;GetHFTData&quot;,&quot;Quandl&quot;,&quot;quantmod&quot;, &quot;tidyquant&quot;)
+lapply(packs, function(i)(
+  if(!require(i, character.only = TRUE)){
+    install.packages(i, dependencies = TRUE, quiet = TRUE)
+  }
+))
+
+# Se rbcb e GetHFData não estiverem no CRAN
+devtools::install_github(&#39;wilsonfreitas/rbcb&#39;)
+devtools::install_github(&#39;msperlin/GetHFData&#39;) </code></pre>
+</div>
+</div>
+<div id="analisando-series-temporais" class="section level1 unnumbered">
+<h1>Analisando séries temporais</h1>
 <div id="refs" class="references">
 <div id="ref-ehlers2009analise">
 <p>EHLERS, R. 2009. “Análise de Séries Temporais: Relatório Técnico.” <em>Säo Paulo: USP</em>.</p>
@@ -168,6 +215,18 @@ dos dados com o passar do tempo.</p>
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 <script src="/js/math-code.js"></script>
