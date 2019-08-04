@@ -17,7 +17,7 @@
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/08/04/s%C3%A9ries-temporais-forecast-com-arima/</guid>
-      <description> Introdução  A abordagem de Box-Jenkins  </description>
+      <description> Introdução  A abordagem de Box-Jenkins  A família ARIMA  </description>
     </item>
     
     <item>
@@ -28,17 +28,6 @@
       <guid>/2019/07/30/s%C3%A9ries-temporais/</guid>
       <description>Introdução Seja no mercado financeiro, na previsão do tempo ou até na quantidade de vezes que piscamos os olhos por dia, as séries temporais estão presentes. As séries temporais possuem grande valor na tomada de decisão em diversas áreas do conhecimento especialmente por sua flexibilidade e possibilidade de extrapolação para o futuro, sendo ferramentas ideais para fazer forecast ou previsão.
 Metodologias envolvendo automatização surgem como um ferramental adicional para a tomada de decisão em negócios relacionados não apenas à Tecnologia da Informação, mas a outros segmentos que geram números dispostos na forma de séries temporais.</description>
-    </item>
-    
-    <item>
-      <title>Hello R Markdown</title>
-      <link>/2015/07/23/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      
-      <guid>/2015/07/23/hello-r-markdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
     </item>
     
   </channel>

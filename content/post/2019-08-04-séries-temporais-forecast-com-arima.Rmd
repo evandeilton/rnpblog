@@ -18,3 +18,7 @@ self-contained: true
 # Introdução
 
 # A abordagem de Box-Jenkins
+
+# A família ARIMA
+
+
