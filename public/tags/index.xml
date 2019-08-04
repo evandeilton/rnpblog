@@ -6,7 +6,7 @@
     <description>Recent content in Tags on Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 30 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Aug 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>ARIMA</title>
       <link>/tags/arima/</link>
-      <pubDate>Tue, 30 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/arima/</guid>
       <description></description>
@@ -23,7 +23,7 @@
     <item>
       <title>Time series</title>
       <link>/tags/time-series/</link>
-      <pubDate>Tue, 30 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/time-series/</guid>
       <description></description>
@@ -32,7 +32,7 @@
     <item>
       <title>séries temporais</title>
       <link>/tags/s%C3%A9ries-temporais/</link>
-      <pubDate>Tue, 30 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/s%C3%A9ries-temporais/</guid>
       <description></description>

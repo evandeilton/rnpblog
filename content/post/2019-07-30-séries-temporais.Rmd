@@ -1,5 +1,5 @@
 ---
-title: Séries temporais
+title: Séries temporais - Introdução
 author: LOPES, J. E.
 date: '2019-07-30'
 slug: séries-temporais
