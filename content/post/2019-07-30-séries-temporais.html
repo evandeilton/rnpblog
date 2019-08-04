@@ -85,67 +85,85 @@ são consumos em finais de semana e picos o consumo em jornadas de pico. Já em
 (D) tem-se um padrão caótico dos dados onde não se nota tendência ou sazonalidade
 dos dados com o passar do tempo.</p>
 </div>
-<div id="obtendo-series-temporais-na-internet" class="section level1">
-<h1>Obtendo séries temporais na internet</h1>
-<p>Existem diversas fontes de séries na internet, listamos aqui as principais nacionais e
-internacionais.</p>
-<div id="fontes-nacionais-em-pacotes" class="section level2">
-<h2>Fontes nacionais em pacotes</h2>
+<div id="estacionariedade" class="section level1">
+<h1>Estacionariedade</h1>
+<p>Uma propriedade muito importante das séries temporais é a <em>estacionariedade</em>.
+Se esta propriedade não for satisfeita, é pouco provável que tenhamos condições de
+construir um modelo para os dados, uma vez que o padrão da série será dificil de ser
+mapeado matematicamente. Para verificar esta propriedade temos três critérios básicos:</p>
 <ul>
-<li><em>BETS</em>: Brazilian economic time series</li>
-<li><em>rbcb</em>: Portal de dados abertos do <a href="https://dadosabertos.bcb.gov.br/">BCB</a></li>
-<li><em>GetTDData</em>: <a href="http://www.tesouro.gov.br/tesouro-direto-balanco-e-estatisticas">Dados do Tesouro Direto</a></li>
-<li><em>GetDFPData</em>: <a href="http://www.bmfbovespa.com.br/pt_br/produtos/listados-a-vista-e-derivativos/renda-variavel/empresas-listadas.htm">Demostrativos financeiros</a> de empresas listadas na B3</li>
-<li><em>GetHFTData</em>: Dados de negociações em alta frequência da B3</li>
+<li><em>A média</em>: deve ser <em>constante</em> ao longo do tempo, mas independente dele;</li>
+<li><em>A variância</em>: também deve ser constante (homocedástica) e independente do tempo;</li>
+<li><em>A covariância</em>: para quaisquer dois termos consecutivos, a covariância precisa ser
+independente do tempo.</li>
 </ul>
+<blockquote>
+<p>Para entender mais, verifique que um passeio aleatório (<em>random walk</em>) é um tipo de série temporal, que parece estacionária, mas não é (verifique). Muitos confundem série estacionária com passeio aleatório.</p>
+</blockquote>
+<p>Quando uma série não é estacionária, a primeira coisa a ser feita é torná-la estacionária antes de aplicar qualquer técnica de forecast. Mas como saber se uma série é ou não estacionária? Uma opção muito aplicada é o <em>Teste de estacionariedade de Dickey Fuller</em>, também chamado de <em>ADF(Augmented Dickey-Fuller)</em> . O que o teste faz em linhas gerais é verificar se os três critérios acima são validados, utilizando a ideia de <em>raiz unitária</em> e <em>defasagem</em> da série e definindo as hipóteses:</p>
+<p><span class="math display">\[H_0=\text{Existe pelo menos uma raiz dentro do círculo unitário}\]</span><br />
+contra
+<span class="math display">\[H_1=\text{Não existem raízes dentro do círculo unitário}\]</span></p>
+<p>Se <span class="math inline">\(H_0\)</span> não for rejeitada, a série é estacionária.</p>
+<p>Seguindo a mesma ideia do teste ADF, existem outros testes como o teste de <em>Phillips - Perron</em>, <span class="citation">(Phillips and Perron <a href="#ref-phillips1988testing">1988</a>)</span> que é uma generalização do teste ADF e também o KPSS desenvolvido pelos pesquisadores Denis Kwiatkowski , Peter C. B. Phillips, Peter Schmidt e Yongcheol Shin <span class="citation">(Kwiatkowski et al. <a href="#ref-kwiatkowski1992testing">1992</a>)</span>.</p>
+<blockquote>
+<p>O resultado do teste de Dickey Fuller é fundamental para o seguimento das análises, então não pode ser negligênciado.</p>
+</blockquote>
 </div>
-<div id="fontes-internacionais" class="section level2">
-<h2>Fontes internacionais</h2>
+<div id="tendencia-e-sazonalidade" class="section level1">
+<h1>Tendência e sazonalidade</h1>
+<p>Para melhor descrever a ideia, vamos voltar à série defina por <span class="math inline">\(\{X(t): t \in T\}\)</span>, assim a série <span class="math inline">\(X(t)\)</span> é decomposta em três componentes, <span class="math inline">\(T_i\)</span> para tendência, <span class="math inline">\(S_t\)</span> para sazonalidade e <span class="math inline">\(\epsilon_t\)</span> para uma parte aleatória presente nos dados. Com estas três componentes, podemos formar dois tipos de modelos. O primeiro, denominado <em>Modelo Aditivo</em> é dado por <span class="math inline">\(X_t = T_t+S_t+\epsilon_t\)</span> e o segundo, denominado <em>Modelo Multiplicativo</em> é dado por <span class="math inline">\(X_t = T_t \times S_t \times\epsilon_t\)</span>.</p>
 <ul>
-<li><em>Quandl</em>: The world’s most powerful data lives on Quandl (link).</li>
-<li><em>quantmod</em>: Framework para modelagem em finanças quantitativas.</li>
-<li><em>tidyquant</em>: Bringing financial analysis to the tidyverse.</li>
+<li><em>Tendência</em>: Para testar se existe tendência existem os testes de Wald - Wolfowitz, Teste de Cox-Stuart e Teste de Mann-Kendall que validam as hipóteses:</li>
 </ul>
-</div>
-<div id="instalando-os-pacotes" class="section level2">
-<h2>Instalando os pacotes</h2>
-<p>Podem ser instalados como os comandos abaixo</p>
-<pre class="r"><code>## Instalar pacotes
-packs &lt;- c(&quot;BETS&quot;, &quot;rbcb&quot;, &quot;GetTDData&quot;, &quot;GetDFPData&quot;, 
-           &quot;GetHFTData&quot;,&quot;Quandl&quot;,&quot;quantmod&quot;, &quot;tidyquant&quot;)
-lapply(packs, function(i)(
-  if(!require(i, character.only = TRUE)){
-    install.packages(i, dependencies = TRUE, quiet = TRUE)
-  }
-))
-
-# Se rbcb e GetHFData não estiverem no CRAN
-devtools::install_github(&#39;wilsonfreitas/rbcb&#39;)
-devtools::install_github(&#39;msperlin/GetHFData&#39;) </code></pre>
-</div>
-</div>
-<div id="analisando-series-temporais" class="section level1">
-<h1>Analisando séries temporais</h1>
-<p>Vamos analisar algumas séries</p>
+<p><span class="math display">\[H_0 = \text{Não existe tendência}\]</span> versus
+<span class="math display">\[H_1 = \text{Existe tendência}\]</span></p>
 <ul>
-<li>Taxa de juros - Selic</li>
+<li><em>Sazonalidade</em>: Existem dois tipos de sazonlaidade: a aleatória e a determinística. A primeira se deve ao acaso e a melhor forma de verifica é visualmente através de gráficos. Para a determinística existem os testes de Teste de Kruskal-Wallis, Teste de Friedman e Teste F. Qualquer um destes trabalha com as hipóteses:</li>
 </ul>
-<pre class="r"><code>require(dplyr)
-require(xts)
-#rbcb::search_series(&quot;SELIC&quot;)
-selic &lt;- rbcb::get_series(c(Selic = 4390), 
-                          start_date = &quot;2018-01-01&quot;,
-                          end_date = &quot;2019-07-31&quot;, 
-                          as = &quot;xts&quot;
-                          )
-selic %&gt;%  xts::plot.xts()</code></pre>
-<p><img src="/post/2019-07-30-s%C3%A9ries-temporais_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><span class="math display">\[H_0 = \text{Não existe sazonalidade detrminística}\]</span> versus
+<span class="math display">\[H_1 = \text{Existe sazonalidade detrminística}\]</span></p>
+<p>Para exemplificar algumas destas componentes numa série temporal real, vamos verificar a série temporal <code>AirPassengers</code> padrão do R e que contempla dados mensais do total de passageiros em vôos internacionais entre os anos 50 e 60.</p>
+<pre class="r"><code># Carregando pacote para plotar a série e mais
+require(forecast)
+# Carregando a série
+serie &lt;- AirPassengers
+# Estatísticas descritiva da séries
+summary(serie)   # Resumos estatístico simples</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   104.0   180.0   265.5   280.3   360.5   622.0</code></pre>
+<pre class="r"><code>frequency(serie) # Frequência 12 meses</code></pre>
+<pre><code>## [1] 12</code></pre>
+<pre class="r"><code># cycle(serie)     # Ciclicidade
+# Gráfico da série
+forecast::autoplot(serie)</code></pre>
+<p><img src="/post/2019-07-30-s%C3%A9ries-temporais_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<blockquote>
+<p>O gráfico mostra uma tendência de aumento no volume de passageiros ao longo do tempo além de forte sazonalidade anual. A variância é baixa mesmo tendo aumento nas médias mensais se considerarmos todo o período. Temos indicios de não estacionariedade e precisaremos testar este efeito.</p>
+</blockquote>
+<p>Decompondo a série nas componenetes de tendência, sazonalidade e parte aleatória, vemos claramente o que corrobora com nossa percepção vista nos dados brutos. Existe clara tendência de aumento linear no número de passageiros e uma sazonalidade bem definida no período de 12 meses.</p>
+<pre class="r"><code># Decomposição pelo modelo aditivo
+serie %&gt;% 
+  decompose(type = &quot;additive&quot;) %&gt;% 
+  forecast::autoplot()</code></pre>
+<p><img src="/post/2019-07-30-s%C3%A9ries-temporais_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Finalizamos a primeira parte de nosso poste, mas fique alerta para a segunda parte onde trabalharemos com modelos ARIMA para forecast.</p>
+<p>Até a próxima.</p>
+</div>
+<div id="referencias" class="section level1 unnumbered">
+<h1>Referências</h1>
 <div id="refs" class="references">
 <div id="ref-ehlers2009analise">
 <p>EHLERS, R. 2009. “Análise de Séries Temporais: Relatório Técnico.” <em>Säo Paulo: USP</em>.</p>
 </div>
 <div id="ref-granger2014forecasting">
 <p>Granger, Clive William John, and Paul Newbold. 2014. <em>Forecasting Economic Time Series</em>. Academic Press.</p>
+</div>
+<div id="ref-kwiatkowski1992testing">
+<p>Kwiatkowski, Denis, Peter CB Phillips, Peter Schmidt, and Yongcheol Shin. 1992. “Testing the Null Hypothesis of Stationarity Against the Alternative of a Unit Root: How Sure Are We That Economic Time Series Have a Unit Root?” <em>Journal of Econometrics</em> 54 (1-3). Elsevier: 159–78.</p>
+</div>
+<div id="ref-phillips1988testing">
+<p>Phillips, Peter CB, and Pierre Perron. 1988. “Testing for a Unit Root in Time Series Regression.” <em>Biometrika</em> 75 (2). Oxford University Press: 335–46.</p>
 </div>
 </div>
 </div>
