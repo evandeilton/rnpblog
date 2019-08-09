@@ -17,6 +17,8 @@ self-contained: true
 
 # Introdução
 
+## ** Eu mexi nesta bagaça! **
+
 Seja no mercado financeiro, na previsão do tempo ou até na quantidade de vezes 
 que piscamos os olhos por dia, as séries temporais estão presentes. As séries
 temporais possuem grande valor na tomada de decisão em diversas áreas do conhecimento 
