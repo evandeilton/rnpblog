@@ -1,5 +1,5 @@
 ---
-title: Séries temporais - Forecast com ARIMA
+title: Séries temporais - ARIMA
 author: LOPES, J. E.
 date: '2019-08-04'
 slug: séries-temporais-forecast-com-arima
@@ -17,8 +17,85 @@ self-contained: true
 
 # Introdução
 
+Existem muitas técnicas para ajustar modelos de séries temporais e agora vamos conhecer um pouco mais
+sobre séries temporais que seguem processos ARIMA (_Auto Regressive Integrated Moving Avarage_). 
+
+Para analisar o cálculo por trás das técncias sugerimos [@woodward2017applied], [@morettin2006analise] ou [@ferreira2018analise].
+
 # A abordagem de Box-Jenkins
 
+A metodologia de Box-Jenkins é um conjunto de regras que devem ser seguidas para obter o melhor ajuste de modelos cujos dados seguem um processo ARIMA. Os passos a serem seguindos são:
+
+* Teste e correção de estacionariedade e sazonalidade usando o teste ADF;
+* Ajuste do modelo e testes através das análises de autocorrelação (ACF), autocorrelação parcial (PACF) e variância;
+* Encontrar os melhores parâmetros p, d e q para ARIMA, com gráficos e valores ACF / PACF
+* Análise residual para garantir que o resíduo seja ruído branco.
+
+## ACF
+
+O teste ACF pode ser representado por um gráfico de autocorrelação na séries diferenciadas (lag). É algo como testar hoje versus alguns períodos antes. 
+
+Veja os três padrões mais comuns e como interpretá-los.
+
+```{r, eval=TRUE, echo=FALSE}
+x <- c("Um pico grande no lag 1 que diminui depois de alguns lags.",
+       "Um pico grande no lag 1 seguido por uma onda decrescente que alterna entre correlações positivas e negativas.",
+       "Correlações significativas no primeiro ou segundo lag, seguidas por correlações que não são significativas.")
+y <- c("Existe um termo auto-regressivo nos dados. Use PACF para determinar a ordem do termo auto-regressivo.",
+       "Existe um termo auto-regressivo de ordem superior nos dados. Use a função de autocorrelação parcial para determinar a ordem do termo auto-regressivo.",
+       "Um termo de média móvel nos dados. O número de correlações significativas indica a ordem do termo da média móvel.")
+knitr::kable(data.frame("Padrão" = x,
+                        "Significado" = y), caption = "Padrões do ACF")
+```
+
+Vamos exemplificar o ACF utilizando o conjunto de dado `lynx` (Número anual de armadilhas canadenses para Lynx entre 1821 e 1934)
+
+```{r, message=FALSE, warning=FALSE}
+require(dplyr)
+lynx %>% 
+  acf(type = "correlation", plot = FALSE) %>% 
+  forecast::autoplot()
+```
+
+> Neste exemplo vemos que fora do intervalor de confiança (linha azul), temos duas diferenças significativas logo nos dois primeiros lags. Temos evidências de que existe um fator AR na série, mas ainda não temos como saber qual a ordem. Por hora sabemos apenas que é maior que um.
+
+## PACF 
+
+O teste ACF não tem controle sob os lags, para suprir esta necessidade, o PACF é aplicado. Este teste controla os valores da série em janelas mais curtas  
+
+Veja os três padrões mais comuns e como interpretá-los no caso da PACF.
+
+```{r, eval=TRUE, echo=FALSE}
+x <- c("Grande pico no atraso 1 que diminui após alguns atrasos.",
+       "Grande pico no atraso 1 seguido por uma onda amortecida que alterna entre correlações positivas e negativas.",
+       "Correlações significativas na primeira ou segunda defasagem, seguidas por correlações que não são significativas.")
+
+
+y <- c("Um termo médio móvel nos dados. Use a função de autocorrelação para determinar a ordem do termo da média móvel.",
+       "Uma ordem mais alta movendo o termo médio nos dados. Use a função de autocorrelação para determinar a ordem do termo da média móvel.",
+       "Um termo autorregressivo nos dados. O número de correlações significativas indica a ordem do termo autoregressivo.")
+
+knitr::kable(data.frame("Padrão" = x,
+                        "Significado" = y), caption = "Padrões do PACF")
+```
+
+
+```{r}
+# Vamos ver conjuntamente os dois gráficos para lynx
+g1 <- lynx %>% 
+  acf(type = "correlation", plot = FALSE) %>% 
+  forecast::autoplot()
+g2 <- lynx %>% 
+  pacf(type = "correlation", plot = FALSE) %>% 
+  forecast::autoplot()
+gridExtra::grid.arrange(g1, g2, ncol = 1)
+```
+
+> Pelo PACF caimos na situação 3, ou seja, temos um AR com p = 2. Porém, olhando ainda no PACF, temos evidência de média móvel de ordem q = 2 que é o número de lags de baixa ordem ignificativos no ACF. Em resumo, temos um processo ARIMA(2,0,2) pela análise conjunta do ACF e do PACF.
+
 # A família ARIMA
+
+A parte *AR*(_Auto Regressive_) do nome é um tipo de série simples mas útil em muitas situações. O termos *MA*(_Moving Avarage_) refere-se a uma parte que é uma média móvel. Já o *I* refere-se ao total de diferenciações para que a série seja apenas um *ARMA*
+
 
 

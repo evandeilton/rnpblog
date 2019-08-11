@@ -1,5 +1,5 @@
 ---
-title: Séries temporais - Forecast com ARIMA
+title: Séries temporais - ARIMA
 author: LOPES, J. E.
 date: '2019-08-04'
 slug: séries-temporais-forecast-com-arima
@@ -19,10 +19,109 @@ self-contained: true
 
 <div id="introducao" class="section level1">
 <h1>Introdução</h1>
+<p>Existem muitas técnicas para ajustar modelos de séries temporais e agora vamos conhecer um pouco mais
+sobre séries temporais que seguem processos ARIMA (<em>Auto Regressive Integrated Moving Avarage</em>).</p>
+<p>Para analisar o cálculo por trás das técncias sugerimos <span class="citation">(Woodward, Gray, and Elliott <a href="#ref-woodward2017applied">2017</a>)</span>, <span class="citation">(Morettin and Toloi <a href="#ref-morettin2006analise">2006</a>)</span> ou <span class="citation">(FERREIRA <a href="#ref-ferreira2018analise">2018</a>)</span>.</p>
 </div>
 <div id="a-abordagem-de-box-jenkins" class="section level1">
 <h1>A abordagem de Box-Jenkins</h1>
+<p>A metodologia de Box-Jenkins é um conjunto de regras que devem ser seguidas para obter o melhor ajuste de modelos cujos dados seguem um processo ARIMA. Os passos a serem seguindos são:</p>
+<ul>
+<li>Teste e correção de estacionariedade e sazonalidade usando o teste ADF;</li>
+<li>Ajuste do modelo e testes através das análises de autocorrelação (ACF), autocorrelação parcial (PACF) e variância;</li>
+<li>Encontrar os melhores parâmetros p, d e q para ARIMA, com gráficos e valores ACF / PACF</li>
+<li>Análise residual para garantir que o resíduo seja ruído branco.</li>
+</ul>
+<div id="acf" class="section level2">
+<h2>ACF</h2>
+<p>O teste ACF pode ser representado por um gráfico de autocorrelação na séries diferenciadas (lag). É algo como testar hoje versus alguns períodos antes.</p>
+<p>Veja os três padrões mais comuns e como interpretá-los.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-1">Table 1: </span>Padrões do ACF</caption>
+<thead>
+<tr class="header">
+<th align="left">Padrão</th>
+<th align="left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Um pico grande no lag 1 que diminui depois de alguns lags.</td>
+<td align="left">Existe um termo auto-regressivo nos dados. Use PACF para determinar a ordem do termo auto-regressivo.</td>
+</tr>
+<tr class="even">
+<td align="left">Um pico grande no lag 1 seguido por uma onda decrescente que alterna entre correlações positivas e negativas.</td>
+<td align="left">Existe um termo auto-regressivo de ordem superior nos dados. Use a função de autocorrelação parcial para determinar a ordem do termo auto-regressivo.</td>
+</tr>
+<tr class="odd">
+<td align="left">Correlações significativas no primeiro ou segundo lag, seguidas por correlações que não são significativas.</td>
+<td align="left">Um termo de média móvel nos dados. O número de correlações significativas indica a ordem do termo da média móvel.</td>
+</tr>
+</tbody>
+</table>
+<p>Vamos exemplificar o ACF utilizando o conjunto de dado <code>lynx</code> (Número anual de armadilhas canadenses para Lynx entre 1821 e 1934)</p>
+<pre class="r"><code>require(dplyr)
+lynx %&gt;% 
+  acf(type = &quot;correlation&quot;, plot = FALSE) %&gt;% 
+  forecast::autoplot()</code></pre>
+<p><img src="/post/2019-08-04-s%C3%A9ries-temporais-forecast-com-arima_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<blockquote>
+<p>Neste exemplo vemos que fora do intervalor de confiança (linha azul), temos duas diferenças significativas logo nos dois primeiros lags. Temos evidências de que existe um fator AR na série, mas ainda não temos como saber qual a ordem. Por hora sabemos apenas que é maior que um.</p>
+</blockquote>
+</div>
+<div id="pacf" class="section level2">
+<h2>PACF</h2>
+<p>O teste ACF não tem controle sob os lags, para suprir esta necessidade, o PACF é aplicado. Este teste controla os valores da série em janelas mais curtas</p>
+<p>Veja os três padrões mais comuns e como interpretá-los no caso da PACF.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 2: </span>Padrões do PACF</caption>
+<thead>
+<tr class="header">
+<th align="left">Padrão</th>
+<th align="left">Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Grande pico no atraso 1 que diminui após alguns atrasos.</td>
+<td align="left">Um termo médio móvel nos dados. Use a função de autocorrelação para determinar a ordem do termo da média móvel.</td>
+</tr>
+<tr class="even">
+<td align="left">Grande pico no atraso 1 seguido por uma onda amortecida que alterna entre correlações positivas e negativas.</td>
+<td align="left">Uma ordem mais alta movendo o termo médio nos dados. Use a função de autocorrelação para determinar a ordem do termo da média móvel.</td>
+</tr>
+<tr class="odd">
+<td align="left">Correlações significativas na primeira ou segunda defasagem, seguidas por correlações que não são significativas.</td>
+<td align="left">Um termo autorregressivo nos dados. O número de correlações significativas indica a ordem do termo autoregressivo.</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Vamos ver conjuntamente os dois gráficos para lynx
+g1 &lt;- lynx %&gt;% 
+  acf(type = &quot;correlation&quot;, plot = FALSE) %&gt;% 
+  forecast::autoplot()
+g2 &lt;- lynx %&gt;% 
+  pacf(type = &quot;correlation&quot;, plot = FALSE) %&gt;% 
+  forecast::autoplot()
+gridExtra::grid.arrange(g1, g2, ncol = 1)</code></pre>
+<p><img src="/post/2019-08-04-s%C3%A9ries-temporais-forecast-com-arima_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<blockquote>
+<p>Pelo PACF caimos na situação 3, ou seja, temos um AR com p = 2. Porém, olhando ainda no PACF, temos evidência de média móvel de ordem q = 2 que é o número de lags de baixa ordem ignificativos no ACF. Em resumo, temos um processo ARIMA(2,0,2) pela análise conjunta do ACF e do PACF.</p>
+</blockquote>
+</div>
 </div>
 <div id="a-familia-arima" class="section level1">
 <h1>A família ARIMA</h1>
+<p>A parte <em>AR</em>(<em>Auto Regressive</em>) do nome é um tipo de série simples mas útil em muitas situações. O termos <em>MA</em>(<em>Moving Avarage</em>) refere-se a uma parte que é uma média móvel. Já o <em>I</em> refere-se ao total de diferenciações para que a série seja apenas um <em>ARMA</em></p>
+<div id="refs" class="references">
+<div id="ref-ferreira2018analise">
+<p>FERREIRA, Pedro Guilherme Costa. 2018. “Análise de Séries Temporais Em R: Curso Introdutório.” Rio de Janeiro: Elsevier.</p>
+</div>
+<div id="ref-morettin2006analise">
+<p>Morettin, Pedro A, and Clélia Toloi. 2006. “Análise de Séries Temporais.” In <em>Análise de Séries Temporais</em>.</p>
+</div>
+<div id="ref-woodward2017applied">
+<p>Woodward, Wayne A, Henry L Gray, and Alan C Elliott. 2017. <em>Applied Time Series Analysis with R</em>. CRC press.</p>
+</div>
+</div>
 </div>
