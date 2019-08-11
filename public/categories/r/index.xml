@@ -12,14 +12,14 @@
     
     
     <item>
-      <title>Séries temporais - ARIMA</title>
+      <title>Séries temporais - A abordagem de Box-Jenkins para modelos ARIMA</title>
       <link>/2019/08/04/s%C3%A9ries-temporais-forecast-com-arima/</link>
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/08/04/s%C3%A9ries-temporais-forecast-com-arima/</guid>
-      <description>Introdução Existem muitas técnicas para ajustar modelos de séries temporais e agora vamos conhecer um pouco mais sobre séries temporais que seguem processos ARIMA (Auto Regressive Integrated Moving Avarage).
+      <description>Introdução Existem muitas técnicas para ajustar modelos de séries temporais e uma das mais conhecidas é a abordagem de Box-Jenkins que se aplica a modelos de séries temporais que seguem processos ARIMA (Auto Regressive Integrated Moving Avarage).
 Para analisar o cálculo por trás das técncias sugerimos (Woodward, Gray, and Elliott 2017), (Morettin and Toloi 2006) ou (FERREIRA 2018).
- A abordagem de Box-Jenkins A metodologia de Box-Jenkins é um conjunto de regras que devem ser seguidas para obter o melhor ajuste de modelos cujos dados seguem um processo ARIMA.</description>
+A família ARIMA A parte AR(Auto Regressive) do nome é um tipo de série simples mas útil em muitas situações.</description>
     </item>
     
     <item>

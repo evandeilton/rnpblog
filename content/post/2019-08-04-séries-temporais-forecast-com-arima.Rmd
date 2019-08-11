@@ -1,5 +1,5 @@
 ---
-title: Séries temporais - ARIMA
+title: Séries temporais - A abordagem de Box-Jenkins para modelos ARIMA
 author: LOPES, J. E.
 date: '2019-08-04'
 slug: séries-temporais-forecast-com-arima
@@ -17,12 +17,38 @@ self-contained: true
 
 # Introdução
 
-Existem muitas técnicas para ajustar modelos de séries temporais e agora vamos conhecer um pouco mais
-sobre séries temporais que seguem processos ARIMA (_Auto Regressive Integrated Moving Avarage_). 
+Existem muitas técnicas para ajustar modelos de séries temporais e uma das mais conhecidas é a abordagem de Box-Jenkins que se aplica a  modelos de séries temporais que seguem processos ARIMA (_Auto Regressive Integrated Moving Avarage_). 
 
 Para analisar o cálculo por trás das técncias sugerimos [@woodward2017applied], [@morettin2006analise] ou [@ferreira2018analise].
 
-# A abordagem de Box-Jenkins
+## A família ARIMA
+
+A parte *AR*(_Auto Regressive_) do nome é um tipo de série simples mas útil em muitas situações. O termos *MA*(_Moving Avarage_) refere-se a uma parte que é uma média móvel. Já o *I* refere-se ao total de diferenciações para que a série seja apenas um *ARMA*. A família ARIMA forma um ecossistema de modelos. Entre eles estão os já citados AR e MA, mas também temos os ARI (Auto regressivo Integrado) e os IMA (Média Móvel Integrado).
+
+```{r, eval=TRUE, echo=FALSE}
+x <- c("ARIMA(p, d, q)",
+       "ARIMA(p, 0, q)",
+       "ARIMA(p, d, 0)",
+       "ARIMA(0, d, q)",
+       "ARIMA(0, d, 0)",
+       "ARIMA(p, 0, 0)",
+       "ARIMA(0, 0, q)"
+       )
+y <- c("Auto regressivo integrado de média móvel",
+       "Auto regressivo de média móvel",
+       "Auto regressivo integrado (ARI)",
+       "Média móvel integrado (IMA)",
+       "Ruido branco",
+       "Auto regressivo simples",
+       "Média móvel simples")
+
+knitr::kable(data.frame("Notação (ARIMA)" = x, check.names = FALSE,
+                        "Significado" = y), caption = "Família ARIMA(p, d, q)")
+```
+
+
+
+## A abordagem de Box-Jenkins
 
 A metodologia de Box-Jenkins é um conjunto de regras que devem ser seguidas para obter o melhor ajuste de modelos cujos dados seguem um processo ARIMA. Os passos a serem seguindos são:
 
@@ -91,11 +117,8 @@ g2 <- lynx %>%
 gridExtra::grid.arrange(g1, g2, ncol = 1)
 ```
 
-> Pelo PACF caimos na situação 3, ou seja, temos um AR com p = 2. Porém, olhando ainda no PACF, temos evidência de média móvel de ordem q = 2 que é o número de lags de baixa ordem ignificativos no ACF. Em resumo, temos um processo ARIMA(2,0,2) pela análise conjunta do ACF e do PACF.
+> Pelo PACF caimos na situação 3, ou seja, temos um AR com p = 2. Porém, olhando ainda no PACF, temos evidência de média móvel de ordem q = 2 que é o número de lags de baixa ordem ignificativos no ACF. Em resumo, temos um processo ARIMA(2,I,2) pela análise conjunta do ACF e do PACF. Falta saber o valor de I
 
-# A família ARIMA
-
-A parte *AR*(_Auto Regressive_) do nome é um tipo de série simples mas útil em muitas situações. O termos *MA*(_Moving Avarage_) refere-se a uma parte que é uma média móvel. Já o *I* refere-se ao total de diferenciações para que a série seja apenas um *ARMA*
-
+Na primeira parte de nosso artigo sobre as séries temporais entendemos a estrutura das séries e seus principais componentes. Também já sabemos como obter o número ideal de diferenciações para que a série não estacionária se torne estacionária. Agora que conhecemos a receita de bolo fornecida pela abordagem de Box-Jenkins, conseguimos detectar a ordem da parte AR e da parte MA de modeloso ARIMA través do ACF e do PACR. Estamos prontos para ajustar modelos ARIMA para séries temporais.
 
 
